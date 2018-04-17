@@ -1,0 +1,20 @@
+{
+  "name": "todo-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha server/**/*.test.js"
+  },
+  "author": "Abdoelsamea kaheal",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "expect": "^1.20.2",
+    "express": "^4.16.3",
+    "mocha": "^5.1.0",
+    "mongodb": "^2.2.5",
+    "mongoose": "^5.0.14",
+    "supertest": "^3.0.0"
+  }
+}
