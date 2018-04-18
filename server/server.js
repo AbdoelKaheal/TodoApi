@@ -51,6 +51,21 @@ app.get("/todos/:id", (req, res) => {
   }
 });
 
+app.delete("/todos/:id", (req, res) => {
+  let id = req.params.id;
+  if (ObjectId.isValid(id)) {
+    Todo.findByIdAndRemove(id).then(todo => {
+      if (todo !== null) {
+        res.send({ todo }).status(200);
+      } else {
+        res.status(404).send({ error: "object id could not be found" });
+      }
+    });
+  } else {
+    res.status(404).send({ error: "Invalid object id" });
+  }
+});
+
 app.listen(port, () => {
   console.log("Sever started on port 3000");
 });
