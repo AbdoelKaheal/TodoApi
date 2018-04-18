@@ -1,7 +1,7 @@
 //Library Imports
 let express = require("express");
 let bodyParser = require("body-parser");
-
+const { ObjectId } = require("mongodb");
 //local imports
 const { mongoose } = require("./db/mongoose");
 const { Todo } = require("./models/todo");
@@ -9,6 +9,8 @@ const { User } = require("./models/user");
 
 let app = express();
 app.use(bodyParser.json());
+
+const port = process.env.PORT || 3000;
 
 app.post("/todos", (req, res) => {
   let newTodo = new Todo({ text: req.body.text });
@@ -34,7 +36,22 @@ app.get("/todos", (req, res) => {
     });
 });
 
-app.listen(3000, () => {
+app.get("/todos/:id", (req, res) => {
+  console.log(ObjectId);
+  let id = req.params.id;
+  if (ObjectId.isValid(id)) {
+    Todo.findById(id).then(Todo => {
+      if (Todo !== null) {
+        return res.status(200).send({ Todo });
+      }
+      res.status(400).send({ error: "Todo not found" });
+    });
+  } else {
+    return res.status(404).send();
+  }
+});
+
+app.listen(port, () => {
   console.log("Sever started on port 3000");
 });
 

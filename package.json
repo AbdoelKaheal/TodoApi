@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha server/**/*.test.js"
+    "test": "mocha server/**/*.test.js",
+    "start": "node server/server.js"
   },
   "author": "Abdoelsamea kaheal",
   "license": "MIT",
@@ -16,5 +17,9 @@
     "mongodb": "^2.2.5",
     "mongoose": "^5.0.14",
     "supertest": "^3.0.0"
+  },
+  "engines": {
+    "node": "9.10.1",
+    "npm": "5.8.0"
   }
 }
