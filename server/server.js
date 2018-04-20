@@ -1,6 +1,7 @@
 //Library Imports
-let express = require("express");
-let bodyParser = require("body-parser");
+const _ = require("lodash");
+const express = require("express");
+const bodyParser = require("body-parser");
 const { ObjectId } = require("mongodb");
 //local imports
 const { mongoose } = require("./db/mongoose");
@@ -8,6 +9,7 @@ const { Todo } = require("./models/todo");
 const { User } = require("./models/user");
 
 let app = express();
+app.disable("x-powered-by");
 app.use(bodyParser.json());
 
 const port = process.env.PORT || 3000;
@@ -66,8 +68,56 @@ app.delete("/todos/:id", (req, res) => {
   }
 });
 
+app.patch("/todos/:id", (req, res) => {
+  const id = req.params.id;
+  let body = _.pick(req.body, ["text", "completed"]);
+  if (!ObjectId.isValid(id)) {
+    return res.status(404).send({ error: "invalid ID" });
+  }
+  if (_.isBoolean(body.completed) && body.completed) {
+    body.completedAt = new Date().getTime();
+  } else {
+    body.completedAt = null;
+    body.completed = false;
+  }
+
+  Todo.findByIdAndUpdate(id, { $set: body }, { new: true })
+    .then(todo => {
+      if (!todo) {
+        return res.status(404).send({ error: "could not update todo" });
+      }
+      res.status(200).send(todo);
+    })
+    .catch(e => res.status(400).send(e));
+});
+
+/*  This is now for the users api  */
+
+app.post("/users", (req, res) => {
+  const body = _.pick(req.body, ["email", "password"]);
+  let user = new User({
+    email: body.email,
+    password: body.password
+  });
+
+  user
+    .save()
+    .then(() => {
+      return user.generateAuthToken();
+    })
+    .then(token => {
+      console.log(token);
+      res
+        .status(200)
+        .header("x-auth", token)
+        .send(user);
+    })
+    .catch(e => {
+      console.log("error");
+      res.status(400).send({ e });
+    });
+});
+
 app.listen(port, () => {
   console.log("Sever started on port 3000");
 });
-
-module.exports = { app };
