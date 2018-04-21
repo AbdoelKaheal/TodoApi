@@ -10,6 +10,7 @@
   "author": "Abdoelsamea kaheal",
   "license": "MIT",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.2",
     "crypto-js": "^3.1.9-1",
     "expect": "^1.20.2",
