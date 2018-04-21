@@ -16,13 +16,14 @@ app.use(bodyParser.json());
 
 const port = process.env.PORT || 3000;
 
-app.get("/", () => {
+app.get("/", (req, res) => {
   res.status(200).send({
     author: "Abdoelsamea Kaheal",
     description:
       "This API was developed by Abdoelsamea kaheal for any todo APP weather mobile, web or other forms of software. To get started make a post request to /users and send a json with email and password"
   });
 });
+
 app.post("/todos", authenticate, (req, res) => {
   let newTodo = new Todo({ text: req.body.text, _creator: req.user._id });
   newTodo
